@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lmao</title>
+</head>
+<style>
+    #hdd{
+        margin: auto;
+    }
+    #put-here{
+        margin: auto;
+    }
+</style>
+<body>
+    <select name="topic" id="topic-list">
+        <option value="2-sat" title="2-satisfiability">2-sat</option>
+        <option value="binary search" title="Binary search">binary search</option>
+        <option value="bitmasks" title="Bitmasks">bitmasks</option>
+        <option value="brute force" title="Brute force">brute force</option>
+        <option value="chinese remainder theorem" title="Сhinese remainder theorem">chinese remainder theorem</option>
+        <option value="combinatorics" title="Combinatorics">combinatorics</option>
+        <option value="constructive algorithms" title="Constructive algorithms">constructive algorithms</option>
+        <option value="data structures" title="Heaps, binary search trees, segment trees, hash tables, etc">data structures</option>
+        <option value="dfs and similar" title="Dfs and similar">dfs and similar</option>
+        <option value="divide and conquer" title="Divide and Conquer">divide and conquer</option>
+        <option value="dp" title="Dynamic programming">dp</option>
+        <option value="dsu" title="Disjoint set union">dsu</option>
+        <option value="expression parsing" title="Parsing expression grammar">expression parsing</option>
+        <option value="fft" title="Fast Fourier transform">fft</option>
+        <option value="flows" title="Graph network flows">flows</option>
+        <option value="games" title="Games, Sprague–Grundy theorem">games</option>
+        <option value="geometry" title="Geometry, computational geometry">geometry</option>
+        <option value="graph matchings" title="Graph matchings, König's theorem, vertex cover of bipartite graph">graph matchings</option>
+        <option value="graphs" title="Graphs">graphs</option>
+        <option value="greedy" title="Greedy algorithms">greedy</option>
+        <option value="hashing" title="Hashing, hashtables">hashing</option>
+        <option value="implementation" title="Implementation problems, programming technics, simulation">implementation</option>
+        <option value="interactive" title="Interactive problem">interactive</option>
+        <option value="math" title="Mathematics including integration, differential equations, etc">math</option>
+        <option value="matrices" title="Matrix multiplication, determinant, Cramer's rule, systems of linear equations">matrices</option>
+        <option value="meet-in-the-middle" title="Meet-in-the-middle">meet-in-the-middle</option>
+        <option value="number theory" title="Number theory: Euler function, GCD, divisibility, etc">number theory</option>
+        <option value="probabilities" title="Probabilities, expected values, statistics, random variables, etc">probabilities</option>
+        <option value="schedules" title="Scheduling Algorithms">schedules</option>
+        <option value="shortest paths" title="Shortest paths on weighted and unweighted graphs">shortest paths</option>
+        <option value="sortings" title="Sortings, orderings">sortings</option>
+        <option value="string suffix structures" title="Suffix arrays, suffix trees, suffix automatas, etc">string suffix structures</option>
+        <option value="strings" title="Prefix- and Z-functions, suffix structures, Knuth–Morris–Pratt algorithm, etc">strings</option>
+        <option value="ternary search" title="Ternary search">ternary search</option>
+        <option value="trees" title="Trees">trees</option>
+        <option value="two pointers" title="Two pointers">two pointers</option>
+    </select>
+    <table id = "put-here"><tr><td>Sl. No.</td><td>Problem Name</td><td>Rating</td></tr></table>
+    <script>
+        var p = document.getElementById('put-here');
+        const userAction = async (topic) => {
+            p.innerHTML = "<tr><td>Sl. No.</td><td>Problem Name</td><td>Rating</td></tr>";
+            const response = await fetch(`https://codeforces.com/api/problemset.problems?order=BY_RATING_ASC&tags=${topic}`);
+            const myJson = await response.json(); //extract JSON from the http response
+            // do something with myJson
+            var lmao = myJson.result.problems;
+            var newar = [];
+            for (x in lmao){
+                if(lmao[x].rating > 1400 && lmao[x].rating <= 2000 && lmao[x].contestId > 1000) newar.push(lmao[x]);
+            }
+            newar.sort(function(a, b) {
+                var keyA = a.rating,
+                    keyB = b.rating;
+                // Compare the 2 dates
+                if (keyA < keyB) return -1;
+                if (keyA > keyB) return 1;
+                return 0;
+            });
+            var kk = 1;
+            for(x in newar){
+                var cid = newar[x].contestId, name = newar[x].name, ind = newar[x].index;
+                p.innerHTML += `<tr><td>${kk}</td><td><h3><a href="https://codeforces.com/problemset/problem/${cid}/${ind}" target="_blank">${name}</a></h3></td><td><h3>${newar[x].rating}</h3></td></tr>`
+                kk++;
+            }
+        }
+        document.getElementById('topic-list').onchange = () => {
+            userAction(document.getElementById('topic-list').value);
+        }
+    </script>
+</body>
+</html>
