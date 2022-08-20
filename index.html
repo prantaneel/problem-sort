@@ -77,6 +77,58 @@ h1{
     padding: 20px;
     box-shadow: 0px 0px 10px;
 }
+.slider {
+  -webkit-appearance: none;
+  width: 50%;
+  height: 25px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 50px;
+  height: 25px;
+  background: rgba(0, 0, 0, 0.27);
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 50px;
+  height: 25px;
+  background: rgba(0, 0, 0, 0.27);
+  cursor: pointer;
+}
+.rating-indicator{
+    display: flex;
+    text-align: center;
+    margin: 5px 5px 5px 0;
+    padding: 10px;
+    width: fit-content;
+    font-weight: 10;
+    cursor: pointer;
+    border: 1px solid rgba(0, 0, 0, 0.282);
+}
+.rating-indicator:hover{
+    background-color: rgba(0, 0, 0, 0.099) ;
+}
+.lb{
+    border: 1px solid rgba(0, 0, 0, 0.282);
+    padding: 10px;
+    margin: 5px 5px 5px 0;
+    width: fit-content;
+}
+.ind-cont{
+    display: flex;
+}
 </style>
 <body>
     <div class="super-container">
@@ -125,6 +177,16 @@ h1{
         <option value="two pointers" title="Two pointers">two pointers</option>
     </select>
     </div>
+    <div>
+        <div class="ind-cont">
+            <h3 class="lb">Lower Rating Bound</h3>
+            <div class="rating-indicator" id="reload-set"><h3 id="lower-bound">1600</h3></div>
+        </div>
+
+        
+        <input type="range" min="1500" max="2000" value="1600" step="100" class="slider" id="myRange">
+        
+    </div>
 
     <div id="loading-window" class="loader"></div>
     <table id = "customers"><tr><td>Sl. No.</td><td>Problem Name</td><td>Rating</td></tr></table>
@@ -132,6 +194,17 @@ h1{
 </div>
     <script>
         var p = document.getElementById('customers');
+        var slider = document.getElementById('myRange');
+        var output = document.getElementById('lower-bound');
+        var sliderValue = parseInt(slider.value);
+        slider.oninput = function() {
+            sliderValue = parseInt(this.value);
+            output.innerHTML = this.value;
+        }
+        var reload = document.getElementById('reload-set');
+        reload.onclick = function(){
+            userAction(document.getElementById('topic-list').value);
+        }
         const userAction = async (topic) => {
             p.innerHTML = "<tr><td>Sl. No.</td><td>Problem Name</td><td>Rating</td></tr>";
             var response;
@@ -146,7 +219,7 @@ h1{
             var lmao = myJson.result.problems;
             var newar = [];
             for (x in lmao){
-                if(lmao[x].rating > 1500 && lmao[x].rating <= 2100 && lmao[x].contestId > 1200) newar.push(lmao[x]);
+                if(lmao[x].rating >= parseInt(sliderValue) && lmao[x].rating <= 2100 && lmao[x].contestId > 1200) newar.push(lmao[x]);
             }
             newar.sort(function(a, b) {
                 var keyA = a.rating,
